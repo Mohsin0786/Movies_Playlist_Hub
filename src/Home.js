@@ -11,7 +11,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import MovieCard from './MovieCard'
 import Radio from '@material-ui/core/Radio';
-// require('dotenv').config()
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -27,25 +27,24 @@ export default function Home() {
   const classes = useStyles();
   const [builtlistName, setbuiltlistName] = useState({});
   const [newPlaylistData, setnewPlaylistData] = useState({
-    title:""
+    title: ""
   })
   const [searchValue, setSearchValue] = useState("")
   const [movieData, setMovieData] = useState();
   const [open, setOpen] = React.useState(false);
   const [totalPlaylist, settotalPlaylist] = useState([{}])
   const [createPlaylist, setcreatePlaylist] = useState(false)
-
   const [hide, sethide] = useState("show-create")
-
   const [track, settrack] = useState(false)
-
   const [privacyValue, setprivacyValue] = React.useState('private');
 
+  //function for tracking whether Playlist is private or public
   const handleprivacyChange = (event) => {
     setprivacyValue(event.target.value);
   };
-  
-  //getRequest for all the playList
+
+
+  //getRequest for all the playList fetching all playlist
   useEffect(() => {
     console.log(`${process.env.REACT_APP_BACKEND_URL}/api/playlist`)
     fetch(`${process.env.REACT_APP_BACKEND_URL}/api/playlist`)
@@ -57,8 +56,8 @@ export default function Home() {
 
   }, [track])
 
-  //
 
+  //Function for handling search functionality
   const handleSearch = () => {
     fetch(`https://omdbapi.com/?t=${searchValue}&&plot=full&&apikey=${process.env.REACT_APP_API_KEY}`)
       .then(res => res.json())
@@ -68,18 +67,20 @@ export default function Home() {
       })
 
   }
+
   const handleChange = (e) => {
     setSearchValue(e.target.value);
   }
+
   const handleClose = () => {
     setOpen(false)
-    
+
   }
   const handleOpen = () => {
     setOpen(true);
   }
 
-
+  //Function for handling change event of available playlist items
   const handleplaylistChange = (event) => {
     const name = event.target.name;
     setbuiltlistName({
@@ -88,58 +89,54 @@ export default function Home() {
     });
   };
 
-  //
-//
-const handleChangenewList = (e)=>{
-setnewPlaylistData({...newPlaylistData,[e.target.name]: e.target.value});
-}
-//
+
+
+  const handleChangenewList = (e) => {
+    setnewPlaylistData({ ...newPlaylistData, [e.target.name]: e.target.value });
+  }
+
+  //Function for making request to server for creating new playlist and addig movie to it
   const addnewList = () => {
-
     let myPromise = new Promise(function (myResolve, myReject) {
-
       const userId = JSON.parse(localStorage.getItem('userIdValue'));
       newPlaylistData["userId"] = userId;
       newPlaylistData["privacy"] = privacyValue;
       newPlaylistData["movieData"] = movieData;
-      setnewPlaylistData(newPlaylistData)
+      setnewPlaylistData(newPlaylistData) //setting value to the state
 
       myResolve(); // when successful
 
     })
     myPromise.then(() => {
-       fetch(`${process.env.REACT_APP_BACKEND_URL}/api/playlist`, {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(newPlaylistData)
-       })
-         .then(res => res.json())
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/playlist`, { //making post request for adding movie to playlist
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPlaylistData)
+      })
+        .then(res => res.json())
         .then((data) => {
-           settrack(!track)
-           setOpen(false)
-           newPlaylistData.title = ""
-          
-
-         })
-         .catch((err) => {
-           alert(err.message);
-         })
+          settrack(!track)
+          setOpen(false)
+          newPlaylistData.title = ""
+        })
+        .catch((err) => {
+          alert(err.message);
+        })
     })
   }
 
-
-  //
+  //Function for making request to server for adding movie to the available playlist
   const addList = () => {
 
     let myPromise = new Promise(function (myResolve, myReject) {
 
-     builtlistName["movieData"] = movieData
-     setbuiltlistName(builtlistName)
+      builtlistName["movieData"] = movieData
+      setbuiltlistName(builtlistName)
       myResolve(); // when successful
 
     })
     myPromise.then(() => {
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/playlist`, {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/playlist`, { //Making patch request for adding more movies
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(builtlistName)
@@ -153,7 +150,7 @@ setnewPlaylistData({...newPlaylistData,[e.target.name]: e.target.value});
           alert(err.message)
         })
     })
-   
+
   }
   return (
     <>
@@ -164,7 +161,7 @@ setnewPlaylistData({...newPlaylistData,[e.target.name]: e.target.value});
         </div>
         <div className="movie-section">
           {movieData ? movieData.Response !== 'False' ? (
-    <MovieCard movieData={movieData} handleOpen={handleOpen}/>
+            <MovieCard movieData={movieData} handleOpen={handleOpen} />
           ) : (<span>{movieData.Error}</span>) : (<span>Search for any movie</span>)
           }
           <Modal
@@ -190,20 +187,20 @@ setnewPlaylistData({...newPlaylistData,[e.target.name]: e.target.value});
                   >
                     <option aria-label="None" value="" />
                     {
-                      totalPlaylist.map((data,index)=>(
-                       <>
+                      totalPlaylist.map((data, index) => (
+                        <>
 
-                    <option value={data._id}>{data.title}</option>
-                  
-                      </>
-                     ))
-}
+                          <option value={data._id}>{data.title}</option>
+
+                        </>
+                      ))
+                    }
                   </NativeSelect>
-                 
+
                 </FormControl>
               </div>
               <span onClick={addList} className="submit-button">click to add</span>
-              <div className="show-hide-button"> 
+              <div className="show-hide-button">
                 <div className={hide} onClick={
                   () => {
                     setcreatePlaylist(true)
@@ -211,8 +208,8 @@ setnewPlaylistData({...newPlaylistData,[e.target.name]: e.target.value});
                   }}><span> + </span>Create new Playlist</div>
 
                 {
-                  createPlaylist ? (<div   style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' ,position:'fixed' }}>
-                    <TextField id="standard-basic" label="Standard" onChange={handleChangenewList} name="title" value={newPlaylistData.title}/>
+                  createPlaylist ? (<div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'fixed' }}>
+                    <TextField id="standard-basic" label="Standard" onChange={handleChangenewList} name="title" value={newPlaylistData.title} />
                     <RadioGroup aria-label="gender" name="gender1" value={privacyValue} onChange={handleprivacyChange}>
                       <FormControlLabel value="private" control={<Radio />} label="Public" />
                       <FormControlLabel value="public" control={<Radio />} label="Private" />

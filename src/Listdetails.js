@@ -47,14 +47,13 @@ const MovieCard = ({Data})=>{
 export default function Listdetails() {
 
     const [movieData, setmovieData] = useState()
-    let {id} = useParams();
+    let {id} = useParams(); // getting id from url bar
 useEffect(() => {
   
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/listDetails/${id}`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/listDetails/${id}`) //Fetching listDetails based on id provided
     .then((res)=>res.json())
     .then((data)=>{
         setmovieData(data.response)
-        // console.log("list film data",data.response)
     }).catch((err)=>{
         console.log(err)
     })
@@ -67,6 +66,7 @@ useEffect(() => {
         alignItems: 'center'
     }}>
         {
+            //map through data for rendering movie details of available in playlist
             movieData?.map((data,index)=>(
                
                 <MovieCard Data = {data}/>
