@@ -27,6 +27,7 @@ let name,value;
         })
         .then(res=>res.json())
         .then((data)=>{
+            alert("User registerd succesfully!!!! You may login now")
         })
         .catch((err)=>{
          alert(err.message)

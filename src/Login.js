@@ -35,7 +35,7 @@ export default function Login() {
             }
             })
             .catch((err)=>{
-             alert.log(err.message);
+             alert(err.message);
             })
         }
   return (
