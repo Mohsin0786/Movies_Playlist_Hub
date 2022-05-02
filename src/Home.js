@@ -117,6 +117,7 @@ setnewPlaylistData({...newPlaylistData,[e.target.name]: e.target.value});
         .then((data) => {
            settrack(!track)
            setOpen(false)
+           newPlaylistData.title = ""
           
 
          })
