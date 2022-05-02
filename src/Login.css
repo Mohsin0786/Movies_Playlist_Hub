@@ -1,0 +1,37 @@
+.login-container{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 76px;
+}
+.login-card{
+    height: 413px;
+    background: white;
+    width: 419px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 4px;
+}
+
+.login-card-button{
+    background: green;
+    font-size: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 49px;
+    font-weight: 600;
+    color: white;
+    font-family: sans-serif;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.login-content{
+    display: flex;
+    flex-direction: column;
+    height: 275px;
+    justify-content: space-evenly;
+    width: 362px;
+}
